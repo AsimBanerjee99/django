@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Rsgister</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+            {% comment %} background: #34495e; {% endcomment %}
+        }
+        .formbox{
+            width: fit-content;
+            padding: 40px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            {% comment %} background: #191919; {% endcomment %}
+            text-align: center;
+        }
+        .formbox h1{
+            {% comment %} color: white; {% endcomment %}
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+        .formbox input[type = "text"],.formbox input[type = "password"]{
+            border:0;
+            background: none;
+            display: block;
+            margin: 10px auto;
+            text-align: center;
+            border: 2px solid #3498db;
+            padding: 5px 10px;
+            width: 200px;
+            outline: none;
+            color: black;
+            border-radius: 10px;
+            transition: 0.25s;
+        }
+        {% comment %} .formbox input[type = "text"]:focus,.formbox input[type = "password"]:focus{
+            width: 280px;
+            border-color: #2ecc71;
+        } {% endcomment %}
+        .formbox input[type = "submit"]{
+            border:0;
+            background: #2ecc71;
+            display: block;
+            margin: 15px auto;
+            text-align: center;
+            color: white;
+            {% comment %} border: 2px solid #2ecc71; {% endcomment %}
+            padding: 5px 22px;
+            outline: none;
+            {% comment %} color: white; {% endcomment %}
+            border-radius: 24px;
+            transition: 0.25s;
+            cursor: pointer;
+        }
+        {% comment %} .formbox input[type = "submit"]:hover{
+            background: #2ecc71;
+        } {% endcomment %}
+    
+    </style>
+  </head>
+  <body style="background-color: aliceblue;">
+  {% for message in messages %}
+<div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+  {% comment %} <strong>Message: </strong> {% endcomment %}
+  {{message}}
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endfor %}
+
+    <form class="formbox" action="/register/" method="post">
+        {% csrf_token %}
+        <h1>Register</h1>
+        <input type="text" name="Username" placeholder="Username">
+        <input type="text" name="FirstName" placeholder="First Name">
+        <input type="text" name="LastName" placeholder="Last Name">
+        <input type="password" name="Password" placeholder="Password">
+        <input type="password" name="ConfirmPassword" placeholder="Confirm Password">
+        <input type="submit" name="" value="Register">
+        <p class="mb-1">If you already registered then click on Login button</p>
+        <a href="/login" class="float-right"><button type="button" class="btn btn-primary rounded-pill px-5 py-1">Login</button></a>
+    </form>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+  </body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Rsgister</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <style>
+    
+    input {
+        width:fit-content;
+    }
+
+    .sp_width {
+        {% comment %} width:15%; {% endcomment %}
+    }
+
+
+    </style>
+  </head>
+  <body style="background-color: aliceblue;">
+  {% for message in messages %}
+<div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+  {% comment %} <strong>Message: </strong> {% endcomment %}
+  {{message}}
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endfor %}
+
+    <nav class="navbar navbar-light" style="background-color:blueviolet;">
+    <a class="navbar-brand" href="#" style="color:white;">Navbar</a>
+    
+    <div class="float-right">        
+            <a href="/logout"><button type="button" class="btn btn-primary rounded-pill px-5 py-1">Logout</button></a>
+                       
+    </div>
+    </nav>
+    <div class="container mt-2" id="btn_container" style="text-align: center;">
+    <button type="button" id="add_column_btn" onclick="column_addition()" class="btn btn-primary rounded-pill px-5 py-1">Add Column</button>
+    <button type="button" id="add_row_btn" onclick="row_addition()" class="btn btn-primary rounded-pill px-5 py-1">Add Row</button>
+    <a href="/remove_row" id="remove_row"><button type="button" class="btn btn-primary rounded-pill px-5 py-1">Remove Row</button></a>
+    <a href="/remove_column" id="remove_column"><button type="button" class="btn btn-primary rounded-pill px-5 py-1">Remove Column</button></a>
+    </div>
+    <div class="container"  style="margin: 20px;max-width: -webkit-fill-available;padding: 0;text-align: -webkit-center;">
+    <form action="/createtimetable/" method="POST"  style="width: fit-content;" id="submit_btn">
+    {% csrf_token %}
+    <table class="table table-hover table-dark" id="table_id" style="width: fit-content;">
+        <thead style="border-bottom: 3px solid #69748c!important;">
+            <tr id="add_col1">
+            <th scope="col"></th>
+            {% for c in column %}
+                <th scope="col" class="col_class">{{c.name}}</th>
+                <input type="hidden" value={{c.name}} name="col{{forloop.counter}}">
+            {% endfor %}          
+            <th scope="col" class="sp_width" style="display:none" id="add_col3"><input type="text" name="new_col" id="main_col_input"></th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            {% for tt in all_row_with_item %}
+                <tr style="border-color: #69748c!important;border-bottom: 3px solid #69748c!important;">
+                <th scope="row" class="row_class">{{tt.0}}</th>
+                <input type="hidden" value={{tt.0}} name="row_of_col{{forloop.counter}}">
+                {% for ttt in tt.1%}
+                    <td>{{ttt}}</td>
+                    <td class="add_col2 sp_width" style="display:none;"><input type="text" id="col_wise_row{{forloop.parentloop.counter}}"  name="col_wise_row{{forloop.parentloop.counter}}" class="col_wise_row{{forloop.parentloop.counter}}"></td>
+                {% endfor %} 
+                    {% comment %} <td id="add_col21 " class="sp_width"></td> {% endcomment %}
+                
+                </tr>
+            {% endfor %}     
+                <tr id="add_row" class="border-bottom border-light">
+                </tr>
+            
+        </tbody>
+    </table>
+    
+    </form>
+    
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    
+    <script>
+        function column_addition() {
+            document.getElementById("add_col3").style.display="block";
+            {% comment %} document.getElementsByClassName("add_col2").style.display="block"; {% endcomment %}
+            var x = document.getElementsByClassName("add_col2");
+            var i;
+            for (i = 0; i<x.length; i++) {
+                x[i].style.display ="block";
+            }
+            var submit_btn_html =`<input type="submit" class="btn btn-primary rounded-pill px-5 py-1 float-right" value="Save" style="width: fit-content;">
+                                    <input type="hidden" value="col_post" name="row_col_post">`
+                
+            $('#submit_btn').append(submit_btn_html);
+            
+        }
+    </script>
+    <script>
+        function row_addition() {
+            var row_html = `<th scope="row"><input type="text" value="xyz" name="row_name1"></th>
+                            <td><input type="text" value="abc" name="row_wise_col_item{{all_row_with_item.0.1 |length}}1"></td>`
+
+            var submit_btn_html =`<input type="submit" class="btn btn-primary rounded-pill px-5 py-1 float-right" value="Save" style="width: fit-content;">
+                                <input type="hidden" value="row_post" name="row_col_post">`
+            $('#add_row').append(row_html);
+            $('#submit_btn').append(submit_btn_html);
+        }
+    </script>
+    <script>
+    {% if no_table %}
+    document.getElementById("table_id").style.display="none";
+    document.getElementById("remove_row").style.display="none";
+    document.getElementById("remove_column").style.display="none";
+    document.getElementById("add_row_btn").style.display="none";
+    document.getElementById("add_column_btn").style.display="none";
+    
+    var btn_when_no_table = `<button type="button" id="add_row_btn" onclick="table_addition()" class="btn btn-primary rounded-pill px-5 py-1">Add your 1x1 Time Table</button>`
+    $('#btn_container').append(btn_when_no_table);
+       
+        function table_addition() {
+            var table_html = `<table class="table table-hover table-dark" style="width: fit-content;">
+                                <thead style="border-bottom: 3px solid #69748c!important;">
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col"><input type="text" placeholder="time" name="new_table_col"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="border-color: #69748c!important;border-bottom: 3px solid #69748c!important;">
+                                        <th scope="row"><input type="text" placeholder="day" name="new_table_row"></th>
+                                        <td><input type="text" placeholder="subject" name="new_table_item"></td>
+                                    </tr>
+                                </tbody>
+                            </table>`
+
+            var submit_btn_html =`<input type="submit" class="btn btn-primary rounded-pill px-5 py-1 float-right" value="Save" style="width: fit-content;">
+                                    <input type="hidden" value="new_table_post" name="row_col_post">`
+            $('#submit_btn').append(table_html);
+            $('#submit_btn').append(submit_btn_html);
+        }
+    {% endif %}
+    </script>
+
+        <script>
+    {% if only_one_table %}
+    document.getElementById("remove_row").style.display="none";
+    document.getElementById("remove_column").style.display="none";
+    
+    var table_delete = `<a href="/remove_table" id="remove_table"><button type="button" class="btn btn-primary rounded-pill px-5 py-1">Remove Table</button></a>`
+    $('#btn_container').append(table_delete);
+    {% endif %}
+    </script>
+    <script>
+    var q = document.getElementsByClassName("row_class").length
+    var n = document.getElementsByClassName("col_class").length
+    
+    if (q==1){
+        document.getElementById("remove_row").style.display="none";
+    }
+    if (n==1){
+        document.getElementById("remove_column").style.display="none";
+    }
+    </script>
+
+  </body>
+</html>
